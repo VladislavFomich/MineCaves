@@ -3,32 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+[RequireComponent(typeof(WaitIndicator))]
 public class PlayerBuild : MonoBehaviour
 {
-    private GameObject _building;
+    [SerializeField] private WaitIndicator waitIndicator;
+    [SerializeField] private float waitTime = 2f;
+    private Building _building;
+    
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Building"))
+         _building = other.GetComponent<Building>();
+        if (_building != null)
         {
-            _building = other.gameObject;
-            _building.GetComponentInParent<Building>().Interact(true);
+            waitIndicator.endWaitAction += UpgradeBuild;
+            waitIndicator.StartWait(waitTime);
         }
     }
 
 
     private void OnTriggerExit(Collider other)
     {
-
-        if (other.gameObject.layer == LayerMask.NameToLayer("Building"))
+        _building = other.GetComponent<Building>();
+        if (_building != null)
         {
-            if(_building != null)
-            {
-                _building.GetComponentInParent<Building>().Interact(false);
-                _building = null;
-            }
+            waitIndicator.endWaitAction -= UpgradeBuild;
+            waitIndicator.StopWait();
+            _building.Interact(false);
+            _building = null;
         }
     }
 
-   
+   private void UpgradeBuild()
+    {
+        waitIndicator.endWaitAction -= UpgradeBuild;
+        _building?.Interact(true);
+    }
 }

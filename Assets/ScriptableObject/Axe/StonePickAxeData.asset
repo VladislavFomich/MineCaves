@@ -18,3 +18,4 @@ MonoBehaviour:
   _damage: 1
   _name: Stone Axe
   _disription: Very simple and fragile instrument
+  _weaponType: 1

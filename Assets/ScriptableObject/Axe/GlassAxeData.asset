@@ -18,3 +18,4 @@ MonoBehaviour:
   _damage: 10
   _name: Glass Axe
   _disription: Very powerful tool but fragile. Be careful!
+  _weaponType: 1

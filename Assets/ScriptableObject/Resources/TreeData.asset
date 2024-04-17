@@ -17,3 +17,5 @@ MonoBehaviour:
   _count: 2
   _name: Tree
   _disription: 
+  _resourceType: 0
+  _icon: {fileID: 21300000, guid: c4b309994fa8840468d9746cafb695ad, type: 3}

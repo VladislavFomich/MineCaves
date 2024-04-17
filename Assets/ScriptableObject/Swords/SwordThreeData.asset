@@ -18,3 +18,4 @@ MonoBehaviour:
   _damage: 2
   _name: Sword 3
   _disription: Sword 3
+  _weaponType: 2

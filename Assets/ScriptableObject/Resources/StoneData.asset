@@ -18,3 +18,4 @@ MonoBehaviour:
   _name: Stone
   _disription: 
   _resourceType: 1
+  _icon: {fileID: 21300000, guid: acfbdcb260ad4db45b3a79d08d712156, type: 3}

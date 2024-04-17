@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: DiamondlPickAxeData
   m_EditorClassIdentifier: 
   _id: pickaxe_diamond
-  _icon: {fileID: 21300000, guid: 6775bf67243acef4791a2ab61ccc858a, type: 3}
+  _icon: {fileID: 21300000, guid: 0425113ff1c4e9046ab682c98e22c74d, type: 3}
   _hp: 25
   _damage: 5
   _name: Diamond PickAxe
   _disription: ' A very rare pickaxe. Be careful not to show it to other workers!'
+  _weaponType: 0

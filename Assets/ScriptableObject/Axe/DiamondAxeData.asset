@@ -18,3 +18,4 @@ MonoBehaviour:
   _damage: 5
   _name: Diamond Axe
   _disription: A very rare axe. Be careful not to show it to other workers!
+  _weaponType: 1

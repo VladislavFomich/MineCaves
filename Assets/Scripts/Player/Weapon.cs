@@ -16,18 +16,23 @@ public class Weapon : MonoBehaviour
     private int _health;
     private int _damage;
 
+    private float range = 1f;
+    private WeaponManager.Weapons _currentWeapon;
 
-    public void Init(int Hp, int Damage)
+
+    public void Init(int hp, int damage, WeaponManager.Weapons weapon)
     {
-        _health = Hp;
-        _damage = Damage;
+        if (weapon == WeaponManager.Weapons.None) { _currentWeapon = WeaponManager.Weapons.None; return; }
+        _currentWeapon = weapon;
+        _health = hp;
+        _damage = damage;
     }
 
 
     public void Hit()
     {
+        WeaponManager.Instance.ChangeWeaponHP(_currentWeapon, 1);
         _health--;
-        DamageNumber damageNumber = numberPrefab.Spawn(transform.position, _damage);
         hitVfx.Play();
         if (_health == 0)
         {
@@ -38,26 +43,24 @@ public class Weapon : MonoBehaviour
 
     private void DestroyWeapon()
     {
+        _currentWeapon = WeaponManager.Weapons.None;
         destroyWeapon?.Invoke();
         currentModel?.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        //if (other.gameObject.layer == LayerMask.NameToLayer("Weapon"))
-        var target = other.gameObject.GetComponent<Resource>();
+        var target = other.gameObject.GetComponent<IDamagable>();
         if (target != null)
         {
             Hit();
+            //Damage UI
+            Vector3 randomSpawnPosition = other.transform.position + new Vector3(Random.Range(-range, range), Random.Range(-range, range), Random.Range(-range, range));
+            DamageNumber damageNumber = numberPrefab.Spawn(randomSpawnPosition, _damage);
             target.TakeDamage(_damage);
         }
 
-        var enemy = other.gameObject.GetComponent<HumanoidBase>();
-        if(enemy != null)
-        {
-            Hit();
-            enemy.TakeDamage(_damage);
-        }
+       
     }
 
     public void ChangeWeapon(GameObject gameObject)

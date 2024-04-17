@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Mono.Cecil;
+using UnityEngine.UI;
 
 public class ResourceCanvas : MonoBehaviour
 {
@@ -13,6 +14,14 @@ public class ResourceCanvas : MonoBehaviour
     [SerializeField] private TMP_Text goldText;
     [SerializeField] private TMP_Text glassText;
     [SerializeField] private TMP_Text diamondText;
+
+    [SerializeField] private Image moneyImg;
+    [SerializeField] private Image treeImg;
+    [SerializeField] private Image stoneImg;
+    [SerializeField] private Image metalImg;
+    [SerializeField] private Image goldImg;
+    [SerializeField] private Image glassImg;
+    [SerializeField] private Image diamondImg;
 
     public void UpdateResourcesText(ResourceManager.ResourceType resourceType, int count)
     {
@@ -36,6 +45,33 @@ public class ResourceCanvas : MonoBehaviour
             case ResourceManager.ResourceType.Diamond:
                 diamondText.text = count.ToString();
                 break;
+            case ResourceManager.ResourceType.Money:
+                moneyText.text = count.ToString();
+                break;
+        }
+    }
+
+
+    public Image GetImage(ResourceManager.ResourceType resourceType)
+    {
+        switch (resourceType)
+        {
+            case ResourceManager.ResourceType.Tree:
+               return treeImg;
+            case ResourceManager.ResourceType.Stone:
+                return stoneImg;
+            case ResourceManager.ResourceType.Metal:
+                return metalImg;
+            case ResourceManager.ResourceType.Gold:
+                return goldImg;
+            case ResourceManager.ResourceType.Glass:
+                return glassImg;
+            case ResourceManager.ResourceType.Diamond:
+                return diamondImg;
+            case ResourceManager.ResourceType.Money:
+                return moneyImg;
+
+            default: return null;
         }
     }
 }

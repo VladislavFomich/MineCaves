@@ -18,3 +18,4 @@ MonoBehaviour:
   _name: Glass
   _disription: 
   _resourceType: 4
+  _icon: {fileID: 21300000, guid: dfb346116c75c2b4eb48464de4d02afd, type: 3}

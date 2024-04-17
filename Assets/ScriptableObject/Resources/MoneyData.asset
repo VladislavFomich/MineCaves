@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47133081e63be0446a7510b07c0b7951, type: 3}
+  m_Name: MoneyData
+  m_EditorClassIdentifier: 
+  _id: money
+  _hp: 0
+  _count: 1
+  _name: Money
+  _disription: Bless Gold
+  _resourceType: 6
+  _icon: {fileID: 21300000, guid: a28a7c18d6599a64482cd5979bdf305a, type: 3}

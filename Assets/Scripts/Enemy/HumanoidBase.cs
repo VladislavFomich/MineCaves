@@ -1,25 +1,24 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.AI;
+using Random = UnityEngine.Random;
 
-public abstract class HumanoidBase : MonoBehaviour, IDeactivatable
+public abstract class HumanoidBase : MonoBehaviour, IDeactivatable, IDamagable
 {
-    [SerializeField] private int hp;
-    [SerializeField] protected Animator animator;
-    private float _deactivateRadius = 5;
-    [SerializeField] private CapsuleCollider triggerCollider;
-
     public event Action OnDeactivate;
+    [SerializeField] protected int hp;
+    [SerializeField] protected Animator animator;
+    [SerializeField] private GameObject coin;
+    [SerializeField] private int coinCount;
+    [SerializeField] private float spawnRadius = 2f;
+    [SerializeField] private Collider[] triggerCollider;
+    [SerializeField] private bool isBoss;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer != LayerMask.NameToLayer("Weapon"))
-        {
-            SetOnRes(true);
-        }
-    }
+
+    private float _deactivateRadius = 5;
+
+  
 
     public virtual void TakeDamage(int damage)
     {
@@ -27,26 +26,31 @@ public abstract class HumanoidBase : MonoBehaviour, IDeactivatable
         animator.SetTrigger("Damage");
         if (hp <= 0)
         {
-            Death();
+            StartCoroutine(Death());
         }
     }
 
 
-    private void OnTriggerExit(Collider other)
+    private IEnumerator Death()
     {
-        SetOnRes(false);
-    }
-
-
-    private void Death()
-    {
-
         animator.SetTrigger("Death");
-        triggerCollider.enabled = false;
+        foreach (Collider collider in triggerCollider)
+        {
+         collider.enabled = false;
+        }
+        yield return null;
+        if(isBoss )
+        {
+            CanvasManager.Instance.LevelEndCanvas.AddBoss();
+        }
+        else
+        {
+            CanvasManager.Instance.LevelEndCanvas.AddEnemy();
+        }
         SetOnRes(false);
+        SpawnCoin();
         OnDeactivate?.Invoke();
         StartCoroutine(DeathCourutine());
-        //gameObject.SetActive(false);
     }
 
 
@@ -70,9 +74,29 @@ public abstract class HumanoidBase : MonoBehaviour, IDeactivatable
             // Если компонент ResourceTrigger не равен null, то вызываем метод SetOnResource(false)
             if (resourceTrigger != null)
             {
-                resourceTrigger.SetOnResource(OnRes, transform);
+                if(OnRes == false)
+                {
+                Debug.Log(OnRes);
+                    resourceTrigger.SetOnEnemy(OnRes, null);
+                }
+                else
+                {
+                Debug.Log(OnRes);
+                     resourceTrigger.SetOnEnemy(OnRes, transform);
+                }
             }
         }
     }
 
+    private void SpawnCoin()
+    {
+        for (int i = 0; i < coinCount; i++)
+        {
+            // Генерируем случайное смещение в пределах заданного радиуса
+            Vector3 randomOffset = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius));
+
+            // Спавним монетку с учетом случайного смещения
+            Instantiate(coin, transform.position + randomOffset, Quaternion.identity);
+        }
+    }
 }

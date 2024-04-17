@@ -32,10 +32,14 @@ public class Platform : MonoBehaviour
 
     private void OnDisable()
     {
-        var diactivateComponent = diactivateObject.GetComponent<IDeactivatable>();
-        if (diactivateObject != null)
+        if(diactivateObject != null)
         {
-            diactivateComponent.OnDeactivate -= Dissapire;
+            var diactivateComponent = diactivateObject.GetComponent<IDeactivatable>();
+            if (diactivateComponent != null)
+            {
+                diactivateComponent.OnDeactivate -= Dissapire;
+            }
         }
+        
     }
 }

@@ -19,3 +19,4 @@ MonoBehaviour:
   _name: Gold Axe
   _disription: An excellent axe with high durability. The shine from it blinds the
     eyes!
+  _weaponType: 1

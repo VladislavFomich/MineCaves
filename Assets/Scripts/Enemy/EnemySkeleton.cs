@@ -14,9 +14,11 @@ public class EnemySkeleton : HumanoidBase
     [SerializeField] private float chaseDistance = 9;
     [SerializeField] private float attackDistance = 1;
     [SerializeField] private bool isWalkable = true;
+   
+    
 
     private Vector3 _randomPatrolPoint;
-    private Transform _playerTransform;
+    [SerializeField] private Transform _playerTransform;
     private Vector3 _startPosition;
     float playerRange;
 
@@ -40,7 +42,7 @@ public class EnemySkeleton : HumanoidBase
         idleTime = Random.Range(2, 10);
         _startPosition = transform.position;
         _randomPatrolPoint = RandomNavmeshLocation(patrolRadius);
-        _playerTransform = FindObjectOfType<PlayerMove>().transform;
+     //   _playerTransform = FindObjectOfType<PlayerMove>().transform;
 
     }
 
@@ -85,7 +87,8 @@ public class EnemySkeleton : HumanoidBase
 
     private void Patrol()
     {
-         navMeshAgent.SetDestination(_randomPatrolPoint);
+        navMeshAgent.isStopped = false;
+        navMeshAgent.SetDestination(_randomPatrolPoint);
         if (Vector3.Distance(transform.position, _randomPatrolPoint) <= 0.1)
         {
             // Создать новую случайную точку в радиусе вокруг начальной позиции
@@ -116,6 +119,7 @@ public class EnemySkeleton : HumanoidBase
 
     private void Chase()
     {
+        navMeshAgent.isStopped = false;
         navMeshAgent.SetDestination(_playerTransform.position);
     }
 
@@ -123,6 +127,10 @@ public class EnemySkeleton : HumanoidBase
     {
         base.TakeDamage(damage);
         SetState(EnemyStates.Damage);
+        if(hp <= 0)
+        {
+            isWalkable = false;
+        }
     }
 
     private void SetState(EnemyStates state)

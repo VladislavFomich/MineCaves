@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2453570861375245930
 Transform:
   m_ObjectHideFlags: 0
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 3985115876808061275}
   - component: {fileID: 3985115876806149505}
   - component: {fileID: 3985115876806149504}
-  - component: {fileID: 899400774695699482}
+  - component: {fileID: -7987101824121941400}
   m_Layer: 6
   m_Name: Three
   m_TagString: Untagged
@@ -102,20 +102,20 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2.35
   m_Center: {x: 0, y: 1.19, z: 0}
---- !u!136 &899400774695699482
-CapsuleCollider:
+--- !u!114 &-7987101824121941400
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3985115876808272953}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 1.59
-  m_Height: 9.49
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b473a619266dd8e49b0fb1638b2e4520, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaleDuration: 1
+  scaleEase: 2
 --- !u!1 &4337013891399846818
 GameObject:
   m_ObjectHideFlags: 0
@@ -5359,3 +5359,17 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8259839364813286740}
   m_PrefabAsset: {fileID: 0}
+--- !u!136 &4294607614204181318
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3796355829674595680}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.21
+  m_Height: 3.05
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.38, z: 0}

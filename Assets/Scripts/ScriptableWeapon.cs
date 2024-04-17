@@ -11,6 +11,7 @@ public class ScriptableWeapon : ScriptableObject
     [SerializeField] private int _damage;
     [SerializeField] private string _name;
     [SerializeField] private string _disription;
+    [SerializeField] private WeaponManager.WeaponType _weaponType;
 
     public string Id { get => _id; }
     public Sprite Icon { get => _icon; }
@@ -18,4 +19,5 @@ public class ScriptableWeapon : ScriptableObject
     public int Damage { get => _damage; }
     public string Name { get => _name; }
     public string Discription { get => _disription; }
+    public WeaponManager.WeaponType WeaponType { get => _weaponType;}
 }

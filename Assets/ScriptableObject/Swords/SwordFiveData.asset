@@ -18,3 +18,4 @@ MonoBehaviour:
   _damage: 10
   _name: Sword 5
   _disription: Sword 5
+  _weaponType: 2

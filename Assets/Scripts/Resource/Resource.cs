@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using DG.Tweening;
 using UnityEngine.Events;
 
-public class Resource : MonoBehaviour, IDeactivatable
+public class Resource : MonoBehaviour, IDeactivatable, IDamagable
 {
     [SerializeField] private ResourceManager.ResourceType resourceType;
     [SerializeField] private float respawnTime;
@@ -24,7 +25,7 @@ public class Resource : MonoBehaviour, IDeactivatable
     private void Start()
     {
         currentScriptable = ResourceManager.Instance.GetScriptableResource(resourceType);
-        _maxHealth = currentScriptable.Count;
+        _maxHealth = currentScriptable.Hp;
         _health = _maxHealth;
     }
 
@@ -40,7 +41,11 @@ public class Resource : MonoBehaviour, IDeactivatable
     public void TakeDamage(int damage)
     {
         _health -= damage;
-        if (_health <= 0)
+        if( _health > 0)
+        {
+            ResourceAnimationManager.Instance.PlayParticle(transform.position, ResourceAnimationManager.ParticleType.Hit, resourceType);
+        }
+        else
         {
             Death();
         }
@@ -56,22 +61,34 @@ public class Resource : MonoBehaviour, IDeactivatable
     private void Death()
     {
         OnDeactivate?.Invoke();
-        TargetManager.Instance.RemoveObjectFromList(gameObject.transform);
+     //   TargetManager.Instance.RemoveObjectFromList(gameObject.transform);
 
         ResourceManager.Instance.UpdateResourceType(resourceType);
-
+        TaskProgress(resourceType);
         SetOnRes(false);
 
         if (isRestorable)
         {
+            ResourceAnimationManager.Instance.PlayParticle(transform.position, ResourceAnimationManager.ParticleType.Destroy, resourceType);
             deathModel.SetActive(true);
-            //gameObject.SetActive(false);
             model.SetActive(false);
             Invoke("Activate", respawnTime);
+           // gameObject.SetActive(false);
         }
         else
-            gameObject.SetActive(false);
-
+        {
+            ResourceAnimationManager.Instance.TakeResource(currentScriptable.Count, resourceType, transform.position);
+            ResourceAnimationManager.Instance.PlayParticle(transform.position, ResourceAnimationManager.ParticleType.Destroy, resourceType);
+             gameObject.SetActive(false);
+        }
+        if(resourceType == ResourceManager.ResourceType.Tree)
+        {
+            CanvasManager.Instance.LevelEndCanvas.AddTree();
+        }
+        else
+        {
+            CanvasManager.Instance.LevelEndCanvas.AddStone();
+        }
     }
 
 
@@ -89,7 +106,7 @@ public class Resource : MonoBehaviour, IDeactivatable
             // Если компонент ResourceTrigger не равен null, то вызываем метод SetOnResource(false)
             if (resourceTrigger != null)
             {
-                resourceTrigger.SetOnResource(OnRes,transform);
+                resourceTrigger.SetOnResource(OnRes,transform,resourceType);
             }
         }
     }
@@ -114,7 +131,20 @@ public class Resource : MonoBehaviour, IDeactivatable
         deathModel.SetActive(false);
         model.SetActive(true);
         SetOnRes(true);
-        TargetManager.Instance.AddObjectToList(gameObject.transform);
+       // TargetManager.Instance.AddObjectToList(gameObject.transform);
         _health = _maxHealth;
+    }
+
+
+    private void TaskProgress(ResourceManager.ResourceType type)
+    {
+        if(type == ResourceManager.ResourceType.Tree)
+        {
+            QuestManager.Instance.TaskProgress("TakeTree", currentScriptable.Count);
+        }
+        else if (type == ResourceManager.ResourceType.Stone)
+        {
+            QuestManager.Instance.TaskProgress("TakeStone", currentScriptable.Count);
+        }
     }
 }

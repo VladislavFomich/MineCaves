@@ -18,3 +18,4 @@ MonoBehaviour:
   _name: Metal
   _disription: 
   _resourceType: 2
+  _icon: {fileID: 21300000, guid: 77478f06cdf34214e8f56f204c1059f9, type: 3}

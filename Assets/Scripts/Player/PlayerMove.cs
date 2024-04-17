@@ -15,28 +15,34 @@ public class PlayerMove : MonoBehaviour
     private float gravityValue = -9.81f;
     [SerializeField] private Joystick joystick;
     [SerializeField] private Animator animator;
+    [SerializeField] private Transform cameraTransform;
     [SerializeField] private AnimationEventHandler weaponActivator;
     private bool _canCut = true;
     private float _rotationSpeed;
     private bool _groundedPlayer;
     private bool _isMoveble;
+    private float _cameraRotation;
+    public Joystick Joystick { get => joystick; }
 
     public enum PlayerState
     {
         Idle,
         Move,
-        Cut
+        Cut,
+        SitNow
     }
 
     private PlayerState currentState = PlayerState.Idle;
     private PlayerState previousState = PlayerState.Idle;
 
 
-    public void Init(int speed, float rotation)
+    public void Init(int speed, float rotation, PlayerState firstState)
     {
         _characterController = GetComponent<CharacterController>();
         _speed = speed;
         _rotationSpeed = rotation;
+        _cameraRotation = cameraTransform.eulerAngles.y; // Получаем угол поворота камеры
+        ChangeState(firstState);
     }
 
 
@@ -52,7 +58,6 @@ public class PlayerMove : MonoBehaviour
         playerVelocity.y += gravityValue * Time.deltaTime;
         _characterController.Move(playerVelocity * Time.deltaTime);
 
-
         if (_characterController.isGrounded)
         {
             animator.SetBool("OnGround", true);
@@ -66,14 +71,17 @@ public class PlayerMove : MonoBehaviour
         //Input
         Vector3 dir = new Vector3(joystick.Horizontal, 0, joystick.Vertical);
 
-        if (dir != Vector3.zero)
+        if (!Vector3.Equals(dir, Vector3.zero))
         {
             currentState = PlayerState.Move;
 
-            _characterController.Move(_speed * Time.deltaTime * dir);
+            // Поворачиваем направление движения относительно камеры
+            Vector3 rotatedDir = Quaternion.Euler(0, _cameraRotation, 0) * dir;
+
+            _characterController.Move(_speed * Time.deltaTime * rotatedDir);
             RotateWalk();
 
-            float movementSpeed = dir.magnitude; // Значение MovementSpeed
+            float movementSpeed = rotatedDir.magnitude; // Значение MovementSpeed
             animator.SetFloat("MovementSpeed", movementSpeed);
         }
         else
@@ -126,16 +134,24 @@ public class PlayerMove : MonoBehaviour
                 animator.SetBool("Run", false);
                 animator.SetBool("Idle", false);
                 break;
+
+            case PlayerState.SitNow:
+                animator.SetBool("Cut", false);
+                animator.SetBool("Run", false);
+                animator.SetBool("Idle", false);
+                animator.SetTrigger("SitNow");
+                break;
         }
     }
 
 
     private void RotateWalk()
     {
-        float targetAngle = Mathf.Atan2(joystick.Horizontal, joystick.Vertical) * Mathf.Rad2Deg;
-        float currentAngle = model.transform.rotation.eulerAngles.y;
+        
+        float targetAngle = Mathf.Atan2(joystick.Horizontal, joystick.Vertical) * Mathf.Rad2Deg + _cameraRotation;
 
         // Используем Lerp для интерполяции между текущим углом и целевым углом
+        float currentAngle = model.transform.rotation.eulerAngles.y;
         float newAngle = Mathf.LerpAngle(currentAngle, targetAngle, Time.deltaTime * _rotationSpeed);
 
         // Устанавливаем новый угол вращения модели
@@ -148,9 +164,7 @@ public class PlayerMove : MonoBehaviour
         model.transform.LookAt(resourcesTrigger.Recource);
 
         // Заблокировать вращение по оси X
-        Vector3 euler = model.transform.eulerAngles;
-        euler.x = 0f;
-        model.transform.eulerAngles = euler;
+        model.transform.eulerAngles = new Vector3(0f, model.transform.eulerAngles.y, 0f);
     }
 
     public void CanCut(bool canCut)

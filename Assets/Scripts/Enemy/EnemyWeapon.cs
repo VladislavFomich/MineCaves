@@ -1,18 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyWeapon : MonoBehaviour
 {
     private int _damage = 1;
-
+    public bool DamageApplied = false;
 
     private void OnTriggerEnter(Collider other)
     {
-        var target = other.gameObject.GetComponent <PlayerHealth>();
-        if (target != null)
+        if (!DamageApplied)
         {
-            target.TakeDamage(_damage);
+            var target = other.gameObject.GetComponent<PlayerHealth>();
+            if (target != null)
+            {
+                target.TakeDamage(_damage);
+                DamageApplied = true;
+            }
         }
     }
 }

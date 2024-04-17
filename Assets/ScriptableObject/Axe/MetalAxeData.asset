@@ -18,3 +18,4 @@ MonoBehaviour:
   _damage: 2
   _name: Metal Axe
   _disription: Good and balanced pickaxe
+  _weaponType: 1
